@@ -3,15 +3,16 @@
   "private": true,
   "scripts": {
     "start": "meteor --port=8000 --settings=settings.json",
-    "test": "meteor test --once --driver-package meteortesting:mocha",
-    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
-    "visualize": "meteor --production --extra-packages bundle-visualizer"
+    "lint": "standardx -v | snazzy",
+    "lint:fix": "standardx --fix -v | snazzy",
+    "build:docs": "npx jsdoc -c ./jsdoc.conf.json",
+    "test": "TEST_SERVER=1 TEST_CLIENT=0 meteor test --once --driver-package=meteortesting:mocha --exclude-archs 'web.browser, web.browser.legacy' --settings=settings.json --port=6519",
+    "test:watch": "TEST_SERVER=1 TEST_CLIENT=0 meteor test --driver-package=meteortesting:mocha --exclude-archs 'web.browser, web.browser.legacy' --settings=settings.json --port=6519",
+    "test:coverage": ""
   },
   "dependencies": {
     "@babel/runtime": "^7.23.5",
-    "meteor-node-stubs": "^1.2.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "meteor-node-stubs": "^1.2.7"
   },
   "meteor": {
     "mainModule": {
@@ -19,5 +20,44 @@
       "server": "server/main.js"
     },
     "testModule": "tests/main.js"
+  },
+  "babel": {
+    "env": {
+      "COVERAGE": {
+        "plugins": [
+          "istanbul"
+        ]
+      }
+    }
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": false,
+      "node": true,
+      "mocha": true,
+      "meteor": true
+    },
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "sourceType": "module",
+      "allowImportExportEverywhere": true
+    },
+    "rules": {
+      "brace-style": [
+        "error",
+        "stroustrup",
+        {
+          "allowSingleLine": true
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.5",
+    "@babel/eslint-parser": "^7.24.5",
+    "babel-plugin-istanbul": "^6.1.1",
+    "chai": "^4.3.7",
+    "sinon": "^15.1.0",
+    "standardx": "^7.0.0"
   }
 }
