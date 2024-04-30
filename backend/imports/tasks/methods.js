@@ -22,7 +22,7 @@ export const checkTask = function ({ _id, checked }) {
 }
 
 export const removeTask = function ({ _id }) {
-  const userid = this.userId
+  const userId = this.userId
   checkUser(userId)
   return TasksCollection.remove ({ _id, userId })
 }

@@ -7,7 +7,7 @@ Meteor.isVerbose = true
 
 Meteor.connect(config.backend.url, {
   AsyncStorage: {
-    getitem: SecureStore.getItemAsync,
+    getItem: SecureStore.getItemAsync,
     setItem: SecureStore.setItemAsync,
     removeItem: SecureStore.deleteItemAsync,
   }
