@@ -21,15 +21,6 @@
     },
     "testModule": "tests/main.js"
   },
-  "babel": {
-    "env": {
-      "COVERAGE": {
-        "plugins": [
-          "istanbul"
-        ]
-      }
-    }
-  },
   "eslintConfig": {
     "env": {
       "browser": false,

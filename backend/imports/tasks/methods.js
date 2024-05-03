@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import { TasksCollection } from './TasksCollection'
+import { NotSignedInError } from '../errors/NotSignedInError'
 
 export const getMyTasks = function () {
   const userId = this.userId
@@ -29,6 +30,6 @@ export const removeTask = function ({ _id }) {
 
 const checkUser = userId => {
   if (!userId) {
-    throw new Meteor.Error('permissionDenied', 'notSignedIn', { userId })
+    throw new NotSignedInError({ userId })
   }
 }
