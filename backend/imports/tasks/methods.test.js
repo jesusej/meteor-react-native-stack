@@ -39,10 +39,15 @@ describe('tasks.methods', function () {
     return TasksCollection.findOne({ _id: taskId })
   }
 
-  const throwsWithoutUser = fn => it('throws if user is not in this-scope', () => {
-    const thrown = expect(() => fn({})).to.throw(NotSignedInError.NAME)
-    thrown.with.property('reason', NotSignedInError.REASON)
-    thrown.with.deep.property('details', { userId: undefined })
+  const throwsWithoutUser = fn => it('throws if user is not in this-scope', async (done) => {
+    try {
+      await fn({})
+    } catch (e) {
+      expect(e).with.property('error', NotSignedInError.NAME)
+      expect(e).with.property('reason', NotSignedInError.REASON)
+      expect(e).with.deep.property('details', { userId: undefined })
+      done()
+    }
   })
 
   describe(checkTask.name, function () {
@@ -92,12 +97,12 @@ describe('tasks.methods', function () {
   describe(removeTask.name, function () {
     throwsWithoutUser(removeTask)
 
-    it('removes a task doc', () => {
+    it('removes a task doc', async () => {
       const taskDoc = createTaskDoc({ userId })
       expect(TasksCollection.find().count()).to.equal(1)
 
-      expect(removeTask.call(env, { _id: Random.id() })).to.equal(0)
-      expect(removeTask.call(env, { _id: taskDoc._id })).to.equal(1)
+      expect(await removeTask.call(env, { _id: Random.id() })).to.equal(0)
+      expect(await removeTask.call(env, { _id: taskDoc._id })).to.equal(1)
 
       expect(TasksCollection.find().count()).to.equal(0)
     })

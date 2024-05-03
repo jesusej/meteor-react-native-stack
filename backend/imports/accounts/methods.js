@@ -4,7 +4,7 @@ import { Meteor } from 'meteor/meteor'
 import { NotSignedInError } from '../errors/NotSignedInError'
 import { PermissionDeniedError } from '../errors/PermissionDeniedError'
 
-export const registerNewUser = function (options) {
+export const registerNewUser = async function (options) {
   check(options, Match.ObjectIncluding({
     email: String,
     password: String,
@@ -19,9 +19,9 @@ export const registerNewUser = function (options) {
     throw new PermissionDeniedError('accounts.userExists', {email})
   }
 
-  const userId = Accounts.createUser({ email, password })
+  const userId = await Accounts.createUserAsync({ email, password })
 
-  Meteor.users.update(userId, { $set: { firstName, lastName } })
+  await Meteor.users.updateAsync(userId, { $set: { firstName, lastName } })
 
   Accounts.sendVerificationEmail(userId, email)
 
@@ -32,7 +32,7 @@ export const registerNewUser = function (options) {
   return { id: userId, token: undefined, tokenExpires: undefined }
 }
 
-export const updateUserProfile = function ({ firstName, lastName }) {
+export const updateUserProfile = async function ({ firstName, lastName }) {
   check(firstName, Match.Maybe(String))
   check(lastName, Match.Maybe(String))
 
@@ -52,15 +52,15 @@ export const updateUserProfile = function ({ firstName, lastName }) {
     updateDoc.$set.lastName = lastName
   }
 
-  return !!Meteor.users.update(userId, updateDoc)
+  return !!(await Meteor.users.updateAsync(userId, updateDoc))
 }
 
-export const deleteAccount = function () {
+export const deleteAccount = async function () {
   const { userId } = this
 
   if (!userId) {
     throw new NotSignedInError({ userId })
   }
 
-  return !!Meteor.users.remove(userId)
+  return !!(await Meteor.users.removeAsync(userId))
 }

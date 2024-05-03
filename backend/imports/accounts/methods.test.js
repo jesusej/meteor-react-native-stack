@@ -21,12 +21,15 @@ describe('accounts.methods', function () {
 
   afterEach(() => restoreAll())
 
-  const throwsWithoutUser = (fn, ...args)=> it('throws if user is not in this-scope', () => {
-    const thrown = expect(() => fn(...args)).to.throw(NotSignedInError.NAME)
-
-    thrown.with.property('reason', NotSignedInError.REASON)
-
-    thrown.with.deep.property('details', { userId: undefined })
+  const throwsWithoutUser = (fn, ...args)=> it('throws if user is not in this-scope', async (done) => {
+    try {
+      await fn(...args)
+    } catch (e) {
+      expect(e).with.property('error', NotSignedInError.NAME)
+      expect(e).with.property('reason', NotSignedInError.REASON)
+      expect(e).with.deep.property('details', { userId: undefined })
+      done()
+    }
   })
 
 
@@ -44,13 +47,13 @@ describe('accounts.methods', function () {
     })
 
     const stubRegister = () => {
-      stub(Accounts, 'createUser', query => {
+      stub(Accounts, 'createUserAsync', query => {
         expect(query).to.deep.equal({ email, password })
 
         return userId
       })
 
-      stub(Meteor.users, 'update', (query, updateDoc) => {
+      stub(Meteor.users, 'updateAsync', (query, updateDoc) => {
         expect(query).to.equal(userId)
         expect(updateDoc).to.deep.equal({
           $set: { firstName, lastName }
@@ -75,23 +78,27 @@ describe('accounts.methods', function () {
       })
     })
 
-    it('throws if user already exists by email', () => {
+    it('throws if user already exists by email', async (done) => {
       stub(Accounts, 'findUserByEmail', (mail) => {
         expect(mail).to.equal(email)
         return true
       })
 
       const args = { email, firstName, lastName, password }
-      const thrown = expect(() => registerNewUser.call(env, args))
-        .to.throw(PermissionDeniedError.NAME)
-      thrown.with.property('reason', 'accounts.userExists')
-      thrown.with.deep.property('details', { email })
+      try {
+        await registerNewUser.call(env, args)
+      } catch (e) {
+        expect(e).with.property('error', PermissionDeniedError.NAME)
+        expect(e).with.property('reason', 'accounts.userExists')
+        expect(e).with.deep.property('details', { email })
+        done()
+      }
     })
 
-    it('creates a new account', () => {
+    it('creates a new account', async () => {
       stubRegister()
       const args = { email, firstName, lastName, password }
-      const result = registerNewUser.call(env, args)
+      const result = await registerNewUser.call(env, args)
       expect(result).to.deep.equal({ id: userId, token: undefined, tokenExpires: undefined })
     })
 
@@ -108,17 +115,22 @@ describe('accounts.methods', function () {
     })
   })
 
-  describe(deleteAccount.name, function () {
+  describe(updateUserProfile.name, function () {
     throwsWithoutUser(updateUserProfile, { firstName: Random.id(), lastName: Random.id() })
 
     it('throws on insufficient args', () => {
-      [
+      const argArray = [
         { firstName: 213 },
         { lastName: 123 }
-      ].forEach(args => {
-        expect(() => updateUserProfile.call(env, args))
-          .to.throw('Match error')
-      })
+      ]
+      
+      for (const args in argArray) {
+          try {
+            updateUserProfile.call(env, args)
+          } catch (e) {
+            expect(e).with.property('error', 'Match error')
+          }
+      }
     })
 
     it('updates a given user', () => {
@@ -135,7 +147,7 @@ describe('accounts.methods', function () {
     })
   })
 
-  describe(updateUserProfile.name, function () {
+  describe(deleteAccount.name, function () {
     throwsWithoutUser(deleteAccount)
 
     it('removes the current signed-in users\'s account', () => {

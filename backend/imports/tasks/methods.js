@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor'
 import { TasksCollection } from './TasksCollection'
 import { NotSignedInError } from '../errors/NotSignedInError'
 
@@ -8,24 +7,24 @@ export const getMyTasks = function () {
   return TasksCollection.find({ userId })
 }
 
-export const insertTask = function ({ text }) {
+export const insertTask = async function ({ text }) {
   const userId = this.userId
   checkUser(userId)
   const checked = false
   const createdAt = new Date()
-  return TasksCollection.insert({ text, userId, checked, createdAt })
+  return TasksCollection.insertAsync({ text, userId, checked, createdAt })
 }
 
-export const checkTask = function ({ _id, checked }) {
+export const checkTask = async function ({ _id, checked }) {
   const userId = this.userId
   checkUser(userId)
-  return TasksCollection.update({ _id, userId }, { $set: { checked } })
+  return TasksCollection.updateAsync({ _id, userId }, { $set: { checked } })
 }
 
-export const removeTask = function ({ _id }) {
+export const removeTask = async function ({ _id }) {
   const userId = this.userId
   checkUser(userId)
-  return TasksCollection.remove ({ _id, userId })
+  return TasksCollection.removeAsync ({ _id, userId })
 }
 
 const checkUser = userId => {
