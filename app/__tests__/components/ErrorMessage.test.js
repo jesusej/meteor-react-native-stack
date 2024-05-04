@@ -3,7 +3,7 @@ import {render, screen} from '@testing-library/react-native'
 import { ErrorMessage } from '../../src/components/ErrorMessage'
 
 describe('ErrorMessage', function () {
-  it('displays a given error as message', async () => {
+  it('displays a given error as message', async function () {
     const error = new Error('this is an error')
     render(
       <ErrorMessage error={error} />

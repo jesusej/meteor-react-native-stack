@@ -8,6 +8,7 @@ export const NavigateButton = ({ title, route }) => {
   return (
     <Button
       title={title}
+      testID="navigateButton"
       color={defaultColors.primary}
       onPress={() => navigation.navigate(route)}
     />
