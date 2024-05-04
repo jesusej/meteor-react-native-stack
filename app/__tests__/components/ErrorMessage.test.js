@@ -1,16 +1,26 @@
 import React from "react"
-import TestRenderer from 'react-test-renderer'
+import {render, screen} from '@testing-library/react-native'
 import { ErrorMessage } from '../../src/components/ErrorMessage'
-import { Text } from "react-native"
 
 describe('ErrorMessage', function () {
   it('displays a given error as message', async () => {
     const error = new Error('this is an error')
-    const testRenderer = TestRenderer.create(
+    render(
       <ErrorMessage error={error} />
     )
 
-    const testInstance = testRenderer.root
-    expect(testInstance.findByType(Text).props.children).toBe(error.message)
+    const errorMessage = screen.getByTestId('errorMessageText')
+
+    expect(errorMessage.props.children).toBe(error.message)
+  })
+
+  it('doesn\'t display given error if undefined', function () {
+    render(
+      <ErrorMessage />
+    )
+
+    const errorMessage = screen.queryByTestId('errorMessageText')
+    
+    expect(errorMessage).toBe(null)
   })
 })

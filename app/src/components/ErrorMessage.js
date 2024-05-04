@@ -6,7 +6,7 @@ export const ErrorMessage = ({ error, message }) => {
 
   return (
     <View style={defaultStyles.container}>
-      <Text style={defaultStyles.danger}>{message || error.message}</Text>
+      <Text style={defaultStyles.danger} testID='errorMessageText'>{message || error.message}</Text>
     </View>
   )
 }
