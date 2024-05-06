@@ -11,7 +11,7 @@ describe('useAccount', function () {
   it('returns user and api', async function () {
     const {result: { current: hookResult}} = renderHook(useAccount)
     
-    expect(hookResult.user._id).toBe('some id')
+    expect(hookResult.user).toEqual({ _id: 'some id', profile: null })
   })
   
   it('returns null if user is not saved', function () {

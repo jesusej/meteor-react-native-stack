@@ -4,7 +4,7 @@ import * as SecureStore from 'expo-secure-store'
 import config from '../../config.json'
 
 // get detailed info about internals
-Meteor.isVerbose = true
+Meteor.isVerbose = false
 
 // connect with Meteor and use a secure store
 // to persist our received login token, so it's encrypted

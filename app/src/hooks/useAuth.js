@@ -52,6 +52,7 @@ export const useAuth = () => {
         }
         const token = Meteor.getAuthToken()
         const type = 'SIGN_IN'
+        console.log('token', token)
         dispatch({ type, token })
       })
     },
