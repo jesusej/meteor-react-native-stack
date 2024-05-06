@@ -14,19 +14,4 @@ describe('useAuth', function () {
 
     expect(hookResult.state).toEqual({isLoading: true, isSignout: false, userToken: null})
   })
-
-  it('returns state updated', function () {
-    jest.useFakeTimers()
-    let hookResult = renderHook(useAuth).result.current
-    
-    act(() => {
-      jest.runAllTimers() 
-    })
-
-    act(() => {
-      hookResult.authContext.signIn({email: 'someEmail', password: 'somePassword', onError: jest.fn()})
-    })
-
-    console.log(hookResult.state)
-  })
 })

@@ -11,12 +11,13 @@ export const Task = ({ task, onCheckboxClick, onDeleteClick }) => {
       <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
         <Checkbox
           value={task.checked}
+          testID={`checkbox-${task._id}`}
           onValueChange={handleCheck}
           style={{ padding: 12 }}
           color={task.checked && defaultColors.placeholder}
           readOnly
         />
-        <Text style={task.checked ? styles.checked : styles.unchecked}>{task.text}</Text>
+        <Text testID={`taskText-${task._id}`} style={task.checked ? styles.checked : styles.unchecked}>{task.text}</Text>
       </View>
       <Button title='X' onPress={() => onDeleteClick(task)} style={{ justifySelf: 'flex-end' }} />
     </View>
