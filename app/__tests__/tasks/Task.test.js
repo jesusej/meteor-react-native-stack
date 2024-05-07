@@ -25,11 +25,11 @@ describe('Task', function () {
       text: 'A task',
     }
 
-    const onCheckboxClick = function ({ checked }) {
+    const onCheckboxClick = jest.fn(({ checked }) => {
       task.checked = checked
-    }
+    })
 
-    const user =  userEvent.setup()
+    const user = userEvent.setup()
     jest.useFakeTimers()
     render(<Task task={task} onCheckboxClick={onCheckboxClick} onDeleteClick={jest.fn} />)
 
@@ -42,5 +42,34 @@ describe('Task', function () {
     })
     
     expect(task.checked).toBe(true)
+    expect(onCheckboxClick).toBeCalled()
+
+    screen.rerender(<Task task={task} onCheckboxClick={onCheckboxClick} onDeleteClick={jest.fn} />)
+
+    expect(checkBox).toBeChecked()
+  })
+
+  it('removes task onPress', async function () {
+    const task = {
+      _id: 'some task',
+      checked: false,
+      text: 'A task',
+    }
+
+    const onDeleteClick = jest.fn()
+
+    const user =  userEvent.setup()
+    jest.useFakeTimers()
+    render(<Task task={task} onCheckboxClick={jest.fn} onDeleteClick={onDeleteClick} />)
+
+    const button = screen.getByText('X')
+    
+    await user.press(button)
+
+    act(() => {
+      jest.runAllTimers()
+    })
+    
+    expect(onDeleteClick).toBeCalled()
   })
 })
