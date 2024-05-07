@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { TextInput, Button, View, KeyboardAvoidingView } from 'react-native'
+import { TextInput, Button, KeyboardAvoidingView } from 'react-native'
 import { defaultColors, defaultStyles } from '../styles/defaultStyles'
 import { AuthContext } from '../contexts/AuthContext'
 import { ErrorMessage } from '../components/ErrorMessage'

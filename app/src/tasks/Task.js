@@ -19,7 +19,7 @@ export const Task = ({ task, onCheckboxClick, onDeleteClick }) => {
         />
         <Text testID={`taskText-${task._id}`} style={task.checked ? styles.checked : styles.unchecked}>{task.text}</Text>
       </View>
-      <Button title='X' onPress={() => onDeleteClick(task)} style={{ justifySelf: 'flex-end' }} />
+      <Button title='X' testID={`remove-${task._id}`} onPress={() => onDeleteClick(task)} style={{ justifySelf: 'flex-end' }} />
     </View>
   )
 }
