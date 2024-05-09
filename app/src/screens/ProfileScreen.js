@@ -48,6 +48,7 @@ export const ProfileScreen = () => {
               placeholderTextColor={defaultColors.placeholder}
               style={{ ...defaultStyles.text, ...defaultStyles.flex1 }}
               value={editValue}
+              testID={`edit-${fieldName}`}
               onChangeText={setEditValue}
             />
             <ErrorMessage error={error} />
@@ -62,9 +63,9 @@ export const ProfileScreen = () => {
       <>
         <Text style={styles.headline}>{title}</Text>
         <View style={{ ...defaultStyles.row, alignSelf: 'stretch' }}>
-          <Text style={{ ...defaultStyles.text, flexGrow: 1 }}>{user[fieldName] || 'Not yet defined'}</Text>
+          <Text style={{ ...defaultStyles.text, flexGrow: 1 }} testID={`profile-${fieldName}`}>{user[fieldName] || 'Not yet defined'}</Text>
           <Button
-            title='Edit' onPress={() => {
+            title='Edit' testID={`button-${fieldName}`} onPress={() => {
               setEditValue(value)
               setEditMode(fieldName)
             }}
@@ -78,7 +79,7 @@ export const ProfileScreen = () => {
   return (
     <View style={defaultStyles.container}>
       <Text style={styles.headline}>Email</Text>
-      <Text style={{ ...defaultStyles.text, alignSelf: 'stretch' }}>{user.emails[0].address}</Text>
+      <Text testID='profile-email' style={{ ...defaultStyles.text, alignSelf: 'stretch' }}>{user.emails[0].address}</Text>
 
       {renderField({ title: 'First Name', fieldName: 'firstName' })}
       {renderField({ title: 'Last Name', fieldName: 'lastName' })}
